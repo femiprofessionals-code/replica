@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { isSupabaseConfigured } from "@/lib/demo";
 
 type CookieToSet = { name: string; value: string; options?: CookieOptions };
 
@@ -10,6 +11,10 @@ const PUBLIC_PREFIXES = ["/login", "/auth", "/points-101", "/_next", "/favicon"]
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
+
+  // Demo mode: no Supabase configured, so skip auth entirely and let every
+  // route render as the demo user. Keeps the frontend previewable with no backend.
+  if (!isSupabaseConfigured()) return response;
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

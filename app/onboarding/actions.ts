@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { isSupabaseConfigured } from "@/lib/demo";
 import { AIRPORTS } from "@/lib/award-data/catalog";
 import { POINTS_PROGRAMS } from "@/lib/reference-data";
 import { CABINS } from "@/lib/types";
@@ -33,6 +34,9 @@ export async function saveOnboarding(
   if (!parsed.success) {
     return { error: "Pick at least one home airport and a cabin preference." };
   }
+
+  // Demo mode: nothing to persist, just proceed into the app.
+  if (!isSupabaseConfigured()) redirect("/search");
 
   const supabase = await createSupabaseServerClient();
   const {

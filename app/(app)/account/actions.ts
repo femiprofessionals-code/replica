@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { isSupabaseConfigured } from "@/lib/demo";
 import { AIRPORTS } from "@/lib/award-data/catalog";
 import { POINTS_PROGRAMS } from "@/lib/reference-data";
 import { CABINS } from "@/lib/types";
@@ -33,6 +34,9 @@ export async function updateAccount(
   if (!parsed.success) {
     return { error: "Keep at least one home airport and a cabin preference." };
   }
+
+  // Demo mode: no backend to write to, report success without persisting.
+  if (!isSupabaseConfigured()) return { saved: true };
 
   const supabase = await createSupabaseServerClient();
   const {
