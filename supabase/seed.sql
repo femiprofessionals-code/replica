@@ -1,0 +1,10 @@
+-- Seeding is done from a single TypeScript source of truth so reference data
+-- and mock deals never drift. Run after `supabase db reset` (or any time):
+--
+--   npm run seed
+--
+-- That script (scripts/seed.ts) uses lib/reference-data.ts and the
+-- MockAwardDataProvider with the service-role key to populate:
+--   points_programs, transfer_partners, booking_instruction_templates, deals
+--
+-- Intentionally left without inline INSERTs to avoid duplicating reference data.
