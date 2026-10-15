@@ -1,0 +1,31 @@
+{
+  "job-count": 2,
+  "jobs": [
+    {
+      "id": 1700001,
+      "url": "https://remotive.com/remote-jobs/software-dev/senior-python-engineer-1700001",
+      "title": "Senior Python Engineer",
+      "company_name": "Globex",
+      "category": "Software Development",
+      "tags": ["python", "aws", "postgres", "fastapi"],
+      "job_type": "full_time",
+      "publication_date": "2026-10-12T09:00:00",
+      "candidate_required_location": "Worldwide",
+      "salary": "$120k - $160k",
+      "description": "<p>We are hiring a <b>Senior Python Engineer</b> to build APIs on AWS with PostgreSQL and FastAPI.</p>"
+    },
+    {
+      "id": 1700002,
+      "url": "https://remotive.com/remote-jobs/design/brand-designer-1700002",
+      "title": "Brand Designer",
+      "company_name": "Initech",
+      "category": "Design",
+      "tags": ["figma", "branding"],
+      "job_type": "full_time",
+      "publication_date": "2026-10-10T09:00:00",
+      "candidate_required_location": "USA Only",
+      "salary": "",
+      "description": "<p>Design brand systems. Figma required.</p>"
+    }
+  ]
+}

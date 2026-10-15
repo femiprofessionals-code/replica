@@ -1,0 +1,20 @@
+[
+  {
+    "legal": "See https://remoteok.com/api for terms. Attribution required.",
+    "0": "This is a legal notice row that must be skipped."
+  },
+  {
+    "id": "99881",
+    "slug": "globex-platform-engineer",
+    "company": "Globex",
+    "position": "Platform Engineer",
+    "tags": ["python", "kubernetes", "terraform", "aws"],
+    "description": "Platform engineering role. Kubernetes, Terraform, AWS, Python.",
+    "location": "Worldwide",
+    "url": "https://remoteok.com/remote-jobs/99881",
+    "apply_url": "https://globex.example/careers/99881",
+    "date": "2026-10-13T12:00:00+00:00",
+    "salary_min": 130000,
+    "salary_max": 170000
+  }
+]

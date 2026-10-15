@@ -1,0 +1,52 @@
+# JobHunter search configuration.
+# Copy to config.yaml and tune. Everything here is reviewable and deterministic.
+
+# Search terms sent to each source.
+queries:
+  - python
+  - backend engineer
+  - platform engineer
+
+# Which boards to pull from (all use legitimate public APIs/feeds).
+sources:
+  - remotive
+  - remoteok
+  - weworkremotely
+  - himalayas
+
+# Hard filters, applied before scoring.
+required_keywords: []          # if set, at least one must appear in the posting
+exclude_keywords:              # any of these disqualifies a posting
+  - clearance
+  - unpaid
+  - internship
+allowed_regions: []            # e.g. ["worldwide", "usa", "europe"]; empty = any remote
+max_age_days: 30
+
+# Soft matching against your CV.
+target_titles:
+  - Backend Engineer
+  - Software Engineer
+  - Platform Engineer
+skills:
+  - python
+  - postgres
+  - aws
+  - docker
+  - typescript
+nice_to_have:
+  - kubernetes
+  - terraform
+  - fastapi
+
+# Only queue matches at or above this score, and never prepare more than the
+# daily cap per run (keeps volume sane and applications genuine).
+min_score: 60
+daily_apply_cap: 10
+
+# Scoring weights (must sum to 100 for scores to read as a percentage).
+weights:
+  title: 35
+  skills: 35
+  keywords: 15
+  recency: 15

@@ -1,0 +1,14 @@
+# Python / venv
+.venv/
+__pycache__/
+*.pyc
+
+# Personal data (keep the .example files, ignore the real ones)
+config.yaml
+cv.md
+.env
+*.csv
+
+# Service account keys
+*service-account*.json
+google-credentials.json
