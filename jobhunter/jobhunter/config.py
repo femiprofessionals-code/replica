@@ -32,6 +32,14 @@ class Config:
     allowed_regions: list[str] = field(default_factory=list)     # empty = any remote region
     max_age_days: int = 30
 
+    # Location and compensation (used by location-aware sources: adzuna, usajobs).
+    country: str = "us"
+    location: str = ""              # e.g. "Glendale, Maryland"
+    distance_miles: int = 25
+    remote_priority: bool = True
+    salary_min: int = 0
+    salary_target: int = 0
+
     # Soft matching.
     target_titles: list[str] = field(default_factory=list)
     skills: list[str] = field(default_factory=list)
@@ -48,8 +56,9 @@ class Config:
         weights = ScoringWeights(**(data.pop("weights", {}) or {}))
         known = {
             "queries", "sources", "required_keywords", "exclude_keywords",
-            "allowed_regions", "max_age_days", "target_titles", "skills",
-            "nice_to_have", "min_score", "daily_apply_cap",
+            "allowed_regions", "max_age_days", "country", "location",
+            "distance_miles", "remote_priority", "salary_min", "salary_target",
+            "target_titles", "skills", "nice_to_have", "min_score", "daily_apply_cap",
         }
         kwargs = {k: v for k, v in data.items() if k in known}
         return Config(weights=weights, **kwargs)

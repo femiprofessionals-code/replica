@@ -1,0 +1,116 @@
+# JobHunter config for Adejumoke (Jummy) Adeyemi - healthcare compliance.
+# Used with profiles/jummy/cv.md as the resume Source of Truth.
+
+# Search terms sent to each source (titles + domain phrases that boards index well).
+queries:
+  - healthcare compliance analyst
+  - regulatory compliance analyst
+  - medicaid compliance analyst
+  - healthcare program analyst
+  - quality assurance healthcare
+  - healthcare quality analyst
+  - program analyst healthcare
+  - audit compliance analyst
+  - healthcare operations analyst
+  - clinical analyst
+
+# Boards that actually carry healthcare / compliance roles.
+# adzuna + usajobs are primary (location + salary filters, all industries, federal
+# health/Medicaid roles). remotive + himalayas are secondary for remote postings.
+sources:
+  - adzuna
+  - usajobs
+  - remotive
+  - himalayas
+
+# Location and comp (used by adzuna/usajobs).
+country: us
+location: Glendale, Maryland
+distance_miles: 20
+remote_priority: true
+salary_min: 75000
+salary_target: 90000
+
+# Hard filters applied before scoring.
+required_keywords: []
+exclude_keywords:
+  - unpaid
+  - internship
+  - commission only
+  - door to door
+  - registered nurse required
+allowed_regions: []          # leave empty; location handled per source
+max_age_days: 30
+
+# Soft matching against the CV. Titles are from the provided list.
+target_titles:
+  - Healthcare Compliance Analyst
+  - Regulatory Compliance Analyst
+  - Medicaid Compliance Analyst
+  - Healthcare Program Analyst
+  - Healthcare Quality Analyst
+  - Healthcare Operations Analyst
+  - Program Compliance Analyst
+  - Healthcare Project Coordinator
+  - Healthcare Project Manager
+  - Quality Improvement Analyst
+  - Audit & Compliance Analyst
+  - Compliance Specialist
+  - Provider Compliance Analyst
+  - Risk & Compliance Analyst
+  - Regulatory Affairs Specialist
+  - Quality Assurance Specialist
+  - Medicaid Program Analyst
+  - Program Analyst
+  - Clinical Analyst
+  - Clinical Operations Analyst
+  - Healthcare Business Analyst
+  - Business Operations Analyst
+  - Healthcare Data Analyst
+  - Population Health Analyst
+  - Healthcare Consultant
+  - Implementation Specialist
+  - Implementation Project Manager
+  - Telehealth Program Manager
+  - Administrative Services Manager
+  - Revenue Cycle Analyst
+  - Medical Claims Supervisor
+
+skills:
+  - DDA compliance
+  - Medicaid waiver
+  - HIPAA compliance
+  - audit readiness
+  - regulatory documentation
+  - corrective action
+  - CAPA
+  - quality assurance
+  - risk resolution
+  - process improvement
+  - stakeholder communication
+  - Excel reporting
+  - project management
+  - PMP
+  - person-centered planning
+
+nice_to_have:
+  - EHR
+  - electronic health record
+  - waiver
+  - person-centered
+  - ISP
+  - CMS
+  - managed care
+  - case management
+  - Medicare
+
+# Queue strong matches for review. ~15/day keeps the weekly volume near the goal
+# while every queued item is genuinely relevant and tailored.
+min_score: 55
+daily_apply_cap: 20
+
+weights:
+  title: 40
+  skills: 35
+  keywords: 15
+  recency: 10

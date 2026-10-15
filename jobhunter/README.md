@@ -5,10 +5,31 @@ queues them for your approval, records the whole process in a sheet, and emails
 you a report every Tuesday and Friday.
 
 Built on a **review-and-approve** model: the system does the searching, scoring,
-and drafting, but nothing is submitted to an employer until you approve it. It
-only pulls from job boards with legitimate public APIs/feeds (Remotive,
-RemoteOK, We Work Remotely, Himalayas), so it does not scrape or risk your
-accounts on sites that forbid automation.
+and drafting, but nothing is submitted to an employer until it is approved. It
+pulls from boards with legitimate public APIs (Adzuna, USAJobs, Remotive,
+Himalayas), so it does not scrape or risk accounts on sites that forbid
+automation.
+
+## Profiles
+
+A profile is a CV (the resume "Source of Truth") plus a search config. The
+committed profile is `profiles/jummy/` (healthcare regulatory/compliance:
+Medicaid, DDA, HIPAA, audit readiness). Point the CLI at it with
+`--cv profiles/jummy/cv.md --config profiles/jummy/config.yaml` or the
+`JOBHUNTER_CV` / `JOBHUNTER_CONFIG` env vars.
+
+## Sources
+
+| Source | Industries | Location/salary filter | Key needed |
+| --- | --- | --- | --- |
+| `adzuna` | all (incl. healthcare) | yes (city + radius + salary) | `ADZUNA_APP_ID`, `ADZUNA_APP_KEY` (free) |
+| `usajobs` | federal (health/Medicaid/compliance) | yes | `USAJOBS_API_KEY`, `USAJOBS_EMAIL` (free) |
+| `remotive` | remote, broad | no | none |
+| `himalayas` | remote, broad | no | none |
+| `remoteok` | remote tech | no | none |
+| `weworkremotely` | remote, category feeds | no | none |
+
+A source with a missing key is skipped quietly so the rest of the run proceeds.
 
 ## How it works
 
@@ -30,10 +51,12 @@ sources -> normalize -> score against CV -> tailor docs -> QUEUE (await approval
   bonus keywords, and recency, weighted to a 0-100 score. Hard filters
   (excluded keywords, required keywords, region, age) disqualify up front.
   No model is involved in scoring, so every number is reproducible.
-- **Documents** (`documents.py`): tailored CV summary + cover letter. Uses the
-  Anthropic API for wording when `ANTHROPIC_API_KEY` is set, strictly limited
-  to facts in your CV; otherwise a deterministic template. Never invents
-  experience, metrics, or skills.
+- **Documents** (`documents.py`): a tailored CV summary and cover letter at
+  queue time, and a full tailored resume generated on approval (to control
+  cost). The rules are adapted from the candidate's own resume-tailoring prompt:
+  the CV is the single Source of Truth, nothing is invented, bullets follow
+  Action -> Scope -> Result -> Impact, and copy is ATS-aware. Uses the Anthropic
+  API when `ANTHROPIC_API_KEY` is set, else a deterministic template.
 - **Tracker** (`tracker/`): Google Sheets when configured, local CSV otherwise.
   One row per job across the full pipeline. You approve by setting the `stage`
   cell to `approved`.
@@ -56,17 +79,27 @@ cd jobhunter
 python3 -m venv .venv && . .venv/bin/activate
 pip install -r requirements.txt
 
-cp config.example.yaml config.yaml   # edit queries, skills, filters
-cp cv.example.md cv.md               # paste your real CV
+# Use the committed profile (or copy the examples for a new person).
+export JOBHUNTER_CONFIG=profiles/jummy/config.yaml
+export JOBHUNTER_CV=profiles/jummy/cv.md
 
 python -m jobhunter search           # fetch, score, queue tailored docs
 python -m jobhunter report --print   # see the pipeline report
 python -m jobhunter approve <id>...  # or set stage=approved in the sheet
-python -m jobhunter apply            # submit approved (email-apply + opt-in)
+python -m jobhunter apply            # resume + submit approved (email-apply + opt-in)
 ```
 
-Without any secrets it runs fully: sources are public, documents fall back to
-templates, and the tracker is a local CSV.
+Without any keys it still runs: free sources work, documents fall back to
+templates, and the tracker is a local CSV. Adzuna/USAJobs need their free keys
+to return results.
+
+## Security
+
+- Never put a password in this repo, a config, or a secret value that is logged.
+  For email, use a Gmail **App Password** (revocable), not the account password.
+- The Google Sheet is accessed by a **service account** you share the sheet
+  with. The system never logs into anyone's Gmail with their password.
+- Treat any credential shared in plain text as compromised and rotate it.
 
 ## Going live (Google Sheet + Tue/Fri reports)
 

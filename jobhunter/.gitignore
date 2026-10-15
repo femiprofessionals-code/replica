@@ -3,9 +3,9 @@
 __pycache__/
 *.pyc
 
-# Personal data (keep the .example files, ignore the real ones)
-config.yaml
-cv.md
+# Personal working files at the root (keep profiles/ committed).
+/config.yaml
+/cv.md
 .env
 *.csv
 

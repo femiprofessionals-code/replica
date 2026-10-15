@@ -66,9 +66,8 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.cmd == "apply":
-        cfg = Config.load(args.config)
-        tracker = get_tracker()
-        res = pipeline.run_apply(tracker, cfg)
+        cfg, cv, tracker = _load(args.config, args.cv)
+        res = pipeline.run_apply(tracker, cfg, cv)
         print(f"Submitted {res['submitted']} by email, {res['manual']} left for manual submit.")
         return 0
 

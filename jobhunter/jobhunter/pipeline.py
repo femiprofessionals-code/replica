@@ -12,14 +12,14 @@ from jobhunter.models import Job, Stage, now_iso
 from jobhunter.sources.base import dedupe
 from jobhunter.sources.registry import build_sources
 from jobhunter.score import rank
-from jobhunter.documents import generate_documents
+from jobhunter.documents import generate_documents, generate_resume
 from jobhunter.tracker.base import Tracker
 from jobhunter.report import send_email
 
 
 def run_search(cfg: Config, cv: CVProfile, tracker: Tracker) -> dict:
     """Fetch, score, and queue the best new matches with tailored docs."""
-    sources = build_sources(cfg.sources)
+    sources = build_sources(cfg.sources, cfg)
     raw: list[Job] = []
     errors: list[str] = []
     for src in sources:
@@ -53,6 +53,8 @@ def run_search(cfg: Config, cv: CVProfile, tracker: Tracker) -> dict:
             record["stage"] = Stage.QUEUED.value
             record["cv_summary"] = docs.cv_summary
             record["cover_letter"] = docs.cover_letter
+            record["ats_match"] = docs.ats_match
+            record["tailoring_summary"] = docs.tailoring_summary
             record["model_used"] = docs.model_used
             queued += 1
         elif is_new:
@@ -77,34 +79,40 @@ def approve(tracker: Tracker, ids: list[str]) -> int:
     return n
 
 
-def run_apply(tracker: Tracker, cfg: Config) -> dict:
-    """Process approved rows. Auto-submit only via email-apply when opted in."""
+def run_apply(tracker: Tracker, cfg: Config, cv: CVProfile) -> dict:
+    """Process approved rows: generate the full tailored resume, then submit only
+    via email-apply when opted in; otherwise leave a clear manual note."""
     send_enabled = os.environ.get("SEND_APPLICATIONS", "").lower() == "true"
     approved = tracker.by_stage(Stage.APPROVED.value)
     submitted, manual = 0, 0
 
     for r in approved[: cfg.daily_apply_cap]:
+        update: dict = {"id": r["id"], "updated_at": now_iso()}
+
+        # Generate the tailored resume now (only for jobs the user approved).
+        if not (r.get("resume") or "").strip():
+            job = Job(
+                source=r.get("source", ""),
+                external_id=str(r.get("id")),
+                title=r.get("title", ""),
+                company=r.get("company", ""),
+                url=r.get("url", ""),
+                description=r.get("description", ""),
+            )
+            update["resume"] = generate_resume(job, cv)
+
         apply_email = (r.get("apply_email") or "").strip()
         if send_enabled and apply_email:
             subject = f"Application: {r.get('title')} - {r.get('company')}"
             body = r.get("cover_letter") or ""
-            ok = send_email(subject, body)
-            if ok:
-                tracker.upsert({
-                    "id": r["id"],
-                    "stage": Stage.APPLIED.value,
-                    "applied_at": now_iso(),
-                    "updated_at": now_iso(),
-                    "notes": "submitted by email",
-                })
+            if send_email(subject, body):
+                update.update(stage=Stage.APPLIED.value, applied_at=now_iso(),
+                              notes="submitted by email")
+                tracker.upsert(update)
                 submitted += 1
                 continue
-        # No legitimate auto path: leave for the human with a clear note.
-        tracker.upsert({
-            "id": r["id"],
-            "updated_at": now_iso(),
-            "notes": f"ready to submit manually: {r.get('apply_url') or r.get('url')}",
-        })
+        update["notes"] = f"ready to submit manually: {r.get('apply_url') or r.get('url')}"
+        tracker.upsert(update)
         manual += 1
 
     return {"submitted": submitted, "manual": manual}

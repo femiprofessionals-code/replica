@@ -68,7 +68,8 @@ class CVProfile:
 
     @staticmethod
     def _extract_skills(sections: dict[str, str]) -> list[str]:
-        for key in ("skills", "technical skills", "core skills", "technologies"):
+        for key in ("skills", "technical skills", "core skills", "core competencies",
+                    "competencies", "technologies", "areas of expertise"):
             if key in sections:
                 blob = sections[key]
                 # Split on commas, bullets, pipes, newlines.

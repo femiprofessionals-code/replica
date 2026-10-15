@@ -1,0 +1,16 @@
+{
+  "results": [
+    {
+      "id": "4455667788",
+      "title": "Healthcare Compliance Analyst",
+      "company": { "display_name": "Beacon Health" },
+      "location": { "display_name": "Remote, US", "area": ["US", "Maryland"] },
+      "description": "Ensure Medicaid and HIPAA compliance. Audit readiness, CAPA, regulatory documentation.",
+      "redirect_url": "https://www.adzuna.com/details/4455667788",
+      "created": "2026-10-13T08:00:00Z",
+      "salary_min": 82000,
+      "salary_max": 95000,
+      "category": { "label": "Healthcare & Nursing Jobs" }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "SearchResult": {
+    "SearchResultItems": [
+      {
+        "MatchedObjectDescriptor": {
+          "PositionID": "USAJOBS-999",
+          "PositionTitle": "Medicaid Program Analyst",
+          "OrganizationName": "Centers for Medicare & Medicaid Services",
+          "PositionURI": "https://www.usajobs.gov/job/999",
+          "ApplyURI": ["https://www.usajobs.gov/job/999/apply"],
+          "PositionLocationDisplay": "Baltimore, Maryland",
+          "PositionLocation": [{ "LocationName": "Baltimore, Maryland" }],
+          "UserArea": { "Details": { "JobSummary": "Analyze Medicaid program compliance and audit readiness." } },
+          "PositionRemuneration": [{ "MinimumRange": "78000", "MaximumRange": "99000" }],
+          "PublicationStartDate": "2026-10-11",
+          "JobCategory": [{ "Name": "Health Insurance Administration" }]
+        }
+      }
+    ]
+  }
+}

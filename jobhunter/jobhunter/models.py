@@ -75,12 +75,16 @@ class ScoredJob:
 
 @dataclass
 class ApplicationDocs:
-    """Tailored documents generated for one job. Facts come from the CV only."""
+    """Tailored documents generated for one job. Facts come from the CV only
+    (the resume Source of Truth). Nothing is invented."""
 
     job_id: str
     cover_letter: str
     cv_summary: str                  # tailored headline/summary for the CV
     highlighted_skills: list[str] = field(default_factory=list)
+    ats_match: int = 0               # estimated ATS match 0-100
+    tailoring_summary: str = ""      # what was emphasized and why
+    tailored_resume: str = ""        # full tailored resume (generated on approval)
     model_used: str = "template"     # "template" or an Anthropic model id
 
 
