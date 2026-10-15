@@ -18,7 +18,7 @@ class SheetsTracker(Tracker):
       JOBHUNTER_SHEET_ID  the spreadsheet id (shared with the service account)
     """
 
-    def __init__(self, sheet_id: str | None = None, worksheet: str = "Applications"):
+    def __init__(self, sheet_id: str | None = None, worksheet: str | None = None):
         import gspread
         from google.oauth2.service_account import Credentials
 
@@ -38,10 +38,16 @@ class SheetsTracker(Tracker):
         self.gc = gspread.authorize(creds)
         self.sheet_id = sheet_id or os.environ["JOBHUNTER_SHEET_ID"]
         sh = self.gc.open_by_key(self.sheet_id)
-        try:
-            self.ws = sh.worksheet(worksheet)
-        except Exception:
-            self.ws = sh.add_worksheet(title=worksheet, rows=1000, cols=len(COLUMNS))
+
+        # Use a named tab if asked, else the first tab of the imported sheet.
+        name = worksheet or os.environ.get("JOBHUNTER_WORKSHEET")
+        if name:
+            try:
+                self.ws = sh.worksheet(name)
+            except Exception:
+                self.ws = sh.add_worksheet(title=name, rows=1000, cols=len(COLUMNS))
+        else:
+            self.ws = sh.sheet1
 
         self._ensure_header()
 

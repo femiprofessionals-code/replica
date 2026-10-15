@@ -8,6 +8,7 @@ __pycache__/
 /cv.md
 .env
 *.csv
+!tracker_template.csv
 
 # Service account keys
 *service-account*.json
